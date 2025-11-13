@@ -1,15 +1,23 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import api from '../lib/api'
 import { Link } from 'react-router-dom'
+import api from '../lib/api'
+import { success, error } from '../lib/toast'
 
 function DonorRequests() {
   const queryClient = useQueryClient()
 
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data,
+    isLoading,
+    isError
+  } = useQuery({
     queryKey: ['donor-requests'],
     queryFn: async () => {
       const res = await api.get('/requests/donor')
       return res.data
+    },
+    onError: () => {
+      error('Failed to load donation requests.')
     }
   })
 
@@ -18,9 +26,19 @@ function DonorRequests() {
       await api.patch(`/requests/${id}/status`, { status })
     },
     onSuccess: () => {
+      success('Request status updated.')
       queryClient.invalidateQueries({ queryKey: ['donor-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['my-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['foods'] })
+    },
+    onError: () => {
+      error('Failed to update request status.')
     }
   })
+
+  const handleStatus = (id, status) => {
+    statusMutation.mutate({ id, status })
+  }
 
   if (isLoading) return <div style={{ padding: 16 }}>Loading...</div>
   if (isError) return <div style={{ padding: 16 }}>Error loading requests</div>
@@ -42,8 +60,11 @@ function DonorRequests() {
           <tr>
             <th>Food</th>
             <th>Requester</th>
+            <th>Email</th>
+            <th>Location</th>
+            <th>Reason</th>
+            <th>Contact</th>
             <th>Status</th>
-            <th>Note</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -57,19 +78,26 @@ function DonorRequests() {
                   'Food not available'
                 )}
               </td>
-              <td>{r.requesterName} ({r.requesterEmail})</td>
+              <td>{r.requesterName}</td>
+              <td>{r.requesterEmail}</td>
+              <td>{r.location}</td>
+              <td>{r.reason}</td>
+              <td>{r.contactNo}</td>
               <td>{r.status}</td>
-              <td>{r.note || '-'}</td>
               <td>
                 <button
-                  disabled={statusMutation.isPending || r.status === 'Approved'}
-                  onClick={() => statusMutation.mutate({ id: r._id, status: 'Approved' })}
+                  disabled={
+                    statusMutation.isPending || r.status === 'Accepted'
+                  }
+                  onClick={() => handleStatus(r._id, 'Accepted')}
                 >
-                  Approve
+                  Accept
                 </button>{' '}
                 <button
-                  disabled={statusMutation.isPending || r.status === 'Rejected'}
-                  onClick={() => statusMutation.mutate({ id: r._id, status: 'Rejected' })}
+                  disabled={
+                    statusMutation.isPending || r.status === 'Rejected'
+                  }
+                  onClick={() => handleStatus(r._id, 'Rejected')}
                 >
                   Reject
                 </button>

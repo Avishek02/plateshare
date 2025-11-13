@@ -1,13 +1,21 @@
 import { useQuery } from '@tanstack/react-query'
-import api from '../lib/api'
 import { Link } from 'react-router-dom'
+import api from '../lib/api'
+import { error } from '../lib/toast'
 
 function MyRequests() {
-  const { data, isLoading, isError } = useQuery({
+  const {
+    data,
+    isLoading,
+    isError
+  } = useQuery({
     queryKey: ['my-requests'],
     queryFn: async () => {
       const res = await api.get('/requests/my')
       return res.data
+    },
+    onError: () => {
+      error('Failed to load your requests.')
     }
   })
 
@@ -31,8 +39,10 @@ function MyRequests() {
           <tr>
             <th>Food</th>
             <th>Donor</th>
+            <th>Location</th>
+            <th>Reason</th>
+            <th>Contact</th>
             <th>Status</th>
-            <th>Note</th>
           </tr>
         </thead>
         <tbody>
@@ -46,8 +56,10 @@ function MyRequests() {
                 )}
               </td>
               <td>{r.donorEmail}</td>
+              <td>{r.location}</td>
+              <td>{r.reason}</td>
+              <td>{r.contactNo}</td>
               <td>{r.status}</td>
-              <td>{r.note || '-'}</td>
             </tr>
           ))}
         </tbody>
