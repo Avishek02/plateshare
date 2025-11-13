@@ -12,7 +12,6 @@ function AvailableFoods() {
   })
 
   if (isLoading) return <div style={{ padding: 16 }}>Loading...</div>
-
   if (isError) return <div style={{ padding: 16 }}>Error loading foods</div>
 
   if (!data || data.length === 0) {
