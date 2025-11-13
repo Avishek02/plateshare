@@ -37,7 +37,8 @@ function Home() {
           transition={{ duration: 0.4, delay: 0.1 }}
           style={{ maxWidth: 600, fontSize: 16, lineHeight: 1.5 }}
         >
-          PlateShare connects donors with people in need. Reduce food waste and make an impact in your community within a few clicks.
+          PlateShare connects donors with people in need. Reduce food waste and make an impact in your
+          community with only a few simple steps.
         </motion.p>
         <motion.div
           initial={{ opacity: 0, y: 10 }}
@@ -144,8 +145,8 @@ function Home() {
         >
           <h2>Why it matters</h2>
           <p>
-            Every plate shared is one less plate wasted. PlateShare helps individuals,
-            communities and organizations distribute surplus food in a safe and organized way.
+            Every shared plate reduces waste and supports real people. PlateShare helps donors and
+            recipients connect in a simple, transparent way.
           </p>
           <ul>
             <li>Reduce food waste</li>
