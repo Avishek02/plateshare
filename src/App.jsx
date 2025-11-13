@@ -9,6 +9,8 @@ import Login from './pages/Login.jsx'
 import Register from './pages/Register.jsx'
 import NotFound from './pages/NotFound.jsx'
 import ProtectedRoute from './auth/ProtectedRoute.jsx'
+import MyRequests from './pages/MyRequests.jsx'
+import DonorRequests from './pages/DonorRequests.jsx'
 
 function App() {
   return (
@@ -38,6 +40,22 @@ function App() {
           element={
             <ProtectedRoute>
               <ManageFoods />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/my-requests'
+          element={
+            <ProtectedRoute>
+              <MyRequests />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path='/donor-requests'
+          element={
+            <ProtectedRoute>
+              <DonorRequests />
             </ProtectedRoute>
           }
         />
