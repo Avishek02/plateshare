@@ -8,7 +8,7 @@ const AuthContext = createContext(null)
 export function useAuth() {
   return useContext(AuthContext)
 }
-
+       
 function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -21,7 +21,8 @@ function AuthProvider({ children }) {
     return unsub
   }, [])
 
-  useEffect(() => {
+
+    useEffect(() => {
     const interceptor = api.interceptors.request.use(async config => {
       const current = auth.currentUser
       if (current) {
@@ -35,13 +36,19 @@ function AuthProvider({ children }) {
     return () => api.interceptors.request.eject(interceptor)
   }, [])
 
+  const logout = async () => {
+    await signOut(auth)
+    setUser(null)
+  }
+
   const value = {
     user,
     loading,
-    signOut: () => signOut(auth)
+    logout
   }
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export default AuthProvider
+

@@ -1,0 +1,89 @@
+.nav {
+  background: #000;
+  color: #fff;
+  padding: 14px 16px;
+}
+
+.nav-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-logo {
+  font-size: 20px;
+  font-weight: 700;
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.logout-btn {
+  background: #e63946;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.login-btn {
+  background: #fff;
+  color: #000 !important;
+  padding: 6px 10px;
+  border-radius: 6px;
+  text-decoration: none;
+}
+
+.hamburger {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 28px;
+  cursor: pointer;
+  display: none;
+}
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  gap: 12px;
+  background: #111;
+  padding: 16px;
+  border-radius: 8px;
+  position: absolute;
+  top: 56px;
+  right: 16px;
+  min-width: 160px;
+  z-index: 10;
+}
+
+.mobile-menu a {
+  color: #fff;
+  text-decoration: none;
+}
+
+.mobile-menu.show {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .nav-links {
+    display: none;
+  }
+  .hamburger {
+    display: block;
+  }
+}

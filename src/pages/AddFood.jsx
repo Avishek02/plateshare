@@ -46,7 +46,11 @@ function AddFood() {
         <input placeholder='Image URL' {...register('imageUrl', { required: true })} />
         <input placeholder='Quantity' {...register('quantity', { required: true })} />
         <input placeholder='Pickup Location' {...register('pickupLocation', { required: true })} />
-        <input type='date' {...register('expireDate', { required: true })} />
+        <input
+          type="date"
+          {...register('expireDate', { required: true })}
+          min={new Date().toISOString().split('T')[0]}
+        />
         <textarea placeholder='Notes' rows={3} {...register('notes')} />
         <button type='submit' disabled={submitting}>
           {submitting ? 'Adding...' : 'Add Food'}

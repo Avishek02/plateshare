@@ -14,199 +14,154 @@ function Home() {
 
   return (
     <div>
-      <section
-        style={{
-          padding: '40px 16px',
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 16,
-          alignItems: 'flex-start'
-        }}
-      >
-        <motion.h1
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-          style={{ fontSize: 32, fontWeight: 700 }}
-        >
-          Share surplus food, feed more people.
-        </motion.h1>
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-          style={{ maxWidth: 600, fontSize: 16, lineHeight: 1.5 }}
-        >
-          PlateShare connects donors with people in need. Reduce food waste and make an impact in your
-          community with only a few simple steps.
-        </motion.p>
-        <motion.div
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.2 }}
-          style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}
-        >
-          <Link to='/foods'>
-            <button>Browse Available Foods</button>
-          </Link>
-          <Link to='/add-food'>
-            <button>Donate Food</button>
-          </Link>
-        </motion.div>
-      </section>
-
-      <section style={{ padding: '24px 16px' }}>
-        <h2>Featured Foods</h2>
-        {isLoading && <p>Loading featured foods...</p>}
-        {isError && <p>Failed to load featured foods.</p>}
-        {!isLoading && !isError && (!data || data.length === 0) && (
-          <p>No featured foods available right now.</p>
-        )}
-        {!isLoading && !isError && data && data.length > 0 && (
-          <div
-            style={{
-              marginTop: 16,
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
-              gap: 16
-            }}
-          >
-            {data.map(food => (
-              <motion.div
-                key={food._id}
-                whileHover={{ y: -4, scale: 1.01 }}
-                transition={{ duration: 0.15 }}
-                style={{
-                  border: '1px solid #ddd',
-                  borderRadius: 8,
-                  padding: 12,
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: 8
-                }}
+      <section className='section hero'>
+        <div className='container'>
+          <div className='hero-grid'>
+            <div>
+              <motion.h1
+                className='hero-title'
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
               >
-                {food.imageUrl && (
-                  <img
-                    src={food.imageUrl}
-                    alt={food.name}
-                    style={{ width: '100%', height: 160, objectFit: 'cover', borderRadius: 6 }}
-                  />
-                )}
-                <h3 style={{ margin: 0 }}>{food.name}</h3>
-                <p style={{ margin: 0 }}>Quantity: {food.quantity}</p>
-                <p style={{ margin: 0 }}>Pickup: {food.pickupLocation}</p>
-                <p style={{ margin: 0, fontSize: 12, color: '#666' }}>
-                  Expires: {new Date(food.expireDate).toLocaleDateString()}
-                </p>
-                <Link to={`/food/${food._id}`}>
-                  <button style={{ marginTop: 8 }}>View Details</button>
+                Turn surplus into support with{' '}
+                <span className='hero-highlight'>PlateShare</span>.
+              </motion.h1>
+              <motion.p
+                className='hero-subtitle'
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.1 }}
+              >
+                Share extra food with your community instead of wasting it. Publish donations in minutes
+                and let people in need request what they truly need.
+              </motion.p>
+              <motion.div
+                className='hero-actions'
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.35, delay: 0.2 }}
+              >
+                <Link to='/foods'>
+                  <button className='btn btn-primary'>View All Foods</button>
+                </Link>
+                <Link to='/add-food'>
+                  <button className='btn btn-secondary'>Donate Food</button>
                 </Link>
               </motion.div>
-            ))}
+              <div className='hero-meta'>
+                <div className='hero-pill'>No wasted food.</div>
+                <div className='hero-pill'>Secure, request-based sharing.</div>
+              </div>
+            </div>
+            <motion.div
+              className='hero-card'
+              initial={{ opacity: 0, scale: 0.96 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.4, delay: 0.15 }}
+            >
+              <div className='section-subtitle'>Live snapshot</div>
+              <div className='grid grid-cols-responsive' style={{ gap: 12 }}>
+                <div>
+                  <div className='card-meta'>Donations today</div>
+                  <div style={{ fontSize: 26, fontWeight: 700 }}>24</div>
+                </div>
+                <div>
+                  <div className='card-meta'>Plates saved</div>
+                  <div style={{ fontSize: 26, fontWeight: 700 }}>120+</div>
+                </div>
+                <div>
+                  <div className='card-meta'>Active donors</div>
+                  <div style={{ fontSize: 26, fontWeight: 700 }}>65</div>
+                </div>
+              </div>
+            </motion.div>
           </div>
-        )}
-        {data && data.length > 0 && (
-          <div style={{ marginTop: 16 }}>
-            <Link to='/foods'>
-              <button>Show All Foods</button>
-            </Link>
-          </div>
-        )}
+        </div>
       </section>
 
-      <section
-        style={{
-          padding: '24px 16px',
-          background: '#f7f7f7',
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))',
-          gap: 16
-        }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.3 }}
-        >
-          <h2>How PlateShare works</h2>
-          <ol style={{ paddingLeft: 18 }}>
-            <li>Create an account and sign in.</li>
-            <li>Publish surplus food with clear details.</li>
-            <li>Recipients request the food they need.</li>
-            <li>Coordinate pickup and complete the donation.</li>
-          </ol>
-        </motion.div>
-        <motion.div
-          initial={{ opacity: 0, y: 15 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.3, delay: 0.1 }}
-        >
-          <h2>Why it matters</h2>
-          <p>
-            Every shared plate reduces waste and supports real people. PlateShare helps donors and
-            recipients connect in a simple, transparent way.
-          </p>
-          <ul>
-            <li>Reduce food waste</li>
-            <li>Support vulnerable communities</li>
-            <li>Build a culture of sharing</li>
-          </ul>
-        </motion.div>
+      <section className='section'>
+        <div className='container'>
+          <div className='section-header'>
+            <div>
+              <div className='section-title'>Featured foods</div>
+              <div className='section-subtitle'>
+              </div>
+            </div>
+          </div>
+
+          {isLoading && <p className='section-subtitle'>Loading featured foods...</p>}
+          {isError && <p className='section-subtitle'>Failed to load featured foods.</p>}
+          {!isLoading && !isError && (!data || data.length === 0) && (
+            <p className='section-subtitle'>No featured foods available right now.</p>
+          )}
+
+          {!isLoading && !isError && data && data.length > 0 && (
+            <>
+              <div className='grid grid-cols-responsive'>
+                {data.map(food => (
+                  <motion.div
+                    key={food._id}
+                    className='card'
+                    whileHover={{ y: -4, scale: 1.01 }}
+                    transition={{ duration: 0.15 }}
+                  >
+                    {food.imageUrl && (
+                      <img
+                        src={food.imageUrl}
+                        alt={food.name}
+                        className='card-image'
+                      />
+                    )}
+                    <div className='card-header'>
+                      <span className='badge-status'>Available</span>
+                      <span>{food.quantity}</span>
+                    </div>
+                    <div className='card-title'>{food.name}</div>
+                    <div className='card-meta'>
+                      Pickup: {food.pickupLocation}
+                      <br />
+                      Expires: {new Date(food.expireDate).toLocaleDateString()}
+                    </div>
+                    <Link to={`/food/${food._id}`}>
+                      <button className='btn btn-secondary' style={{ marginTop: 8 }}>
+                        View Details
+                      </button>
+                    </Link>
+                  </motion.div>
+                ))}
+              </div>
+              <div style={{ marginTop: 16 }}>
+                <Link to='/foods'>
+                  <button className='btn btn-primary'>Show All Foods</button>
+                </Link>
+              </div>
+            </>
+          )}
+        </div>
       </section>
 
-      <section style={{ padding: '24px 16px' }}>
-        <h2>Community snapshot</h2>
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(180px, 1fr))',
-            gap: 16
-          }}
-        >
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.25 }}
-            style={{
-              border: '1px solid #eee',
-              borderRadius: 8,
-              padding: 12
-            }}
-          >
-            <div style={{ fontSize: 24, fontWeight: 700 }}>150+</div>
-            <div>Active donors</div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.25, delay: 0.05 }}
-            style={{
-              border: '1px solid #eee',
-              borderRadius: 8,
-              padding: 12
-            }}
-          >
-            <div style={{ fontSize: 24, fontWeight: 700 }}>500+</div>
-            <div>Successful requests</div>
-          </motion.div>
-          <motion.div
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.25, delay: 0.1 }}
-            style={{
-              border: '1px solid #eee',
-              borderRadius: 8,
-              padding: 12
-            }}
-          >
-            <div style={{ fontSize: 24, fontWeight: 700 }}>1k+</div>
-            <div>Plates saved from waste</div>
-          </motion.div>
+      <section className='section'>
+        <div className='container grid grid-cols-responsive'>
+          <div>
+            <div className='section-title'>How PlateShare works</div>
+            <ol className='card-meta' style={{ paddingLeft: 18, lineHeight: 1.6 }}>
+              <li>Sign in and publish your surplus food.</li>
+              <li>Recipients browse and request what they need.</li>
+              <li>Coordinate pickup and complete the donation.</li>
+            </ol>
+          </div>
+          <div>
+            <div className='section-title'>Why it matters</div>
+            <p className='card-meta' style={{ marginBottom: 8 }}>
+              Every shared plate reduces waste, supports people and strengthens your local community.
+            </p>
+            <ul className='card-meta' style={{ paddingLeft: 18, lineHeight: 1.6 }}>
+              <li>Reduce avoidable food waste.</li>
+              <li>Connect donors with real needs.</li>
+              <li>Make sharing part of daily life.</li>
+            </ul>
+          </div>
         </div>
       </section>
     </div>

@@ -2,14 +2,14 @@ import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import api from '../lib/api'
 import { error } from '../lib/toast'
+import { useAuth } from '../auth/AuthProvider'
 
 function MyRequests() {
-  const {
-    data,
-    isLoading,
-    isError
-  } = useQuery({
-    queryKey: ['my-requests'],
+  const { user, loading } = useAuth()
+
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['my-requests', user?.email],
+    enabled: !loading && !!user,
     queryFn: async () => {
       const res = await api.get('/requests/my')
       return res.data
@@ -19,7 +19,8 @@ function MyRequests() {
     }
   })
 
-  if (isLoading) return <div style={{ padding: 16 }}>Loading...</div>
+  if (loading || isLoading) return <div style={{ padding: 16 }}>Loading...</div>
+  if (!user) return <div style={{ padding: 16 }}>Please login.</div>
   if (isError) return <div style={{ padding: 16 }}>Error loading requests</div>
 
   if (!data || data.length === 0) {

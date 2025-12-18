@@ -1,34 +1,56 @@
 import { Link } from 'react-router-dom'
-import { useAuth } from '../auth/AuthProvider.jsx'
+import { useAuth } from '../auth/AuthProvider'
+import { useState } from 'react'
+import './navbar.css'
 
 function Navbar() {
-  const { user, signOut } = useAuth()
+  const { user, logout } = useAuth()
+  const [open, setOpen] = useState(false)
 
   return (
-    <nav style={{ padding: 12, borderBottom: '1px solid #ddd', display: 'flex', gap: 12, alignItems: 'center' }}>
-      <Link to='/'>PlateShare</Link>
-      <Link to='/'>Home</Link>
-      <Link to='/foods'>Available Foods</Link>
-      {user && (
-        <>
-          <Link to='/add-food'>Add Food</Link>
-          <Link to='/manage-foods'>Manage My Foods</Link>
-          <Link to='/my-requests'>My Requests</Link>
-          <Link to='/donor-requests'>Donation Requests</Link>
-        </>
-      )}
-      <div style={{ marginLeft: 'auto', display: 'flex', gap: 8, alignItems: 'center' }}>
-        {user ? (
-          <>
-            <span>{user.displayName || user.email}</span>
-            <button onClick={signOut}>Logout</button>
-          </>
-        ) : (
-          <>
-            <Link to='/login'>Login</Link>
-            <Link to='/register'>Register</Link>
-          </>
-        )}
+    <nav className='nav'>
+      <div className='nav-container'>
+        <Link to='/' className='nav-logo'>
+          PlateShare
+        </Link>
+
+        <div className='nav-links'>
+          <Link to='/'>Home</Link>
+          <Link to='/foods'>Foods</Link>
+
+          {user && (
+            <>
+              <Link to='/add-food'>Add Food</Link>
+              <Link to='/manage-foods'>My Foods</Link>
+              <Link to='/my-requests'>My Requests</Link>
+              <Link to='/donor-requests'>Donation Requests</Link>
+              <button className='logout-btn' onClick={logout}>Logout</button>
+            </>
+          )}
+
+          {!user && (
+            <Link className='login-btn' to='/login'>Login</Link>
+          )}
+        </div>
+
+        <button className='hamburger' onClick={() => setOpen(!open)}>☰</button>
+
+        <div className={`mobile-menu ${open ? 'show' : ''}`}>
+          <Link to='/'>Home</Link>
+          <Link to='/foods'>Foods</Link>
+
+          {user && (
+            <>
+              <Link to='/add-food'>Add Food</Link>
+              <Link to='/manage-foods'>My Foods</Link>
+              <Link to='/my-requests'>My Requests</Link>
+              <Link to='/donor-requests'>Donation Requests</Link>
+              <button className='logout-btn' onClick={logout}>Logout</button>
+            </>
+          )}
+
+          {!user && <Link to='/login' className='login-btn'>Login</Link>}
+        </div>
       </div>
     </nav>
   )

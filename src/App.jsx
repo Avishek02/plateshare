@@ -20,7 +20,7 @@ import { Toaster } from 'react-hot-toast'
 
 function App() {
   return (
-    <div>
+    <div className='app-root'>
       <Navbar />
       <Routes>
         <Route path='/' element={<Home />} />
@@ -79,7 +79,7 @@ function App() {
       </Routes>
 
       <Toaster position="top-center" />
-F
+      F
       <Footer />
 
     </div>
