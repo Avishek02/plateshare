@@ -79,7 +79,7 @@ function App() {
       </Routes>
 
       <Toaster position="top-center" />
-      F
+      
       <Footer />
 
     </div>

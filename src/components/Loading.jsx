@@ -4,8 +4,6 @@ import { useAuth } from '../auth/AuthProvider'
 import api from '../lib/api'
 import { confirmDelete } from '../lib/confirm'
 import { success, error } from '../lib/toast'
-import Loading from '../components/Loading'
-
 
 function ManageFoods() {
   const { user } = useAuth()
@@ -39,7 +37,7 @@ function ManageFoods() {
     if (ok) deleteMutation.mutate(id)
   }
 
-  if (isLoading) return <Loading />
+  if (isLoading) return <div style={{ padding: 16 }}>Loading...</div>
   if (isError) return <div style={{ padding: 16 }}>Error loading foods</div>
 
   return (

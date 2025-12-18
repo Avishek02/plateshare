@@ -1,3 +1,8 @@
+@import "tailwindcss";
+@plugin "daisyui";
+
+
+
 :root {
   --bg: #0b1120;
   --bg-soft: #020617;
@@ -10,6 +15,7 @@
   --border: #1f2937;
   --danger: #ef4444;
 }
+
 
 * {
   box-sizing: border-box;
@@ -487,4 +493,244 @@ textarea:focus {
   .form-shell {
     padding: 16px;
   }
+}
+
+
+
+
+
+
+/* Add Food UI  */
+:root {
+  --c-primary: #22c55e;
+  --c-primary-600: #16a34a;
+  --c-secondary: #f97316;
+  --c-accent: #bef264;
+
+  --c-bg: #ffffff;
+  --c-surface: #f9fafb;
+  --c-card: #ffffff;
+  --c-border: #e5e7eb;
+
+  --c-text: #111827;
+  --c-muted: #6b7280;
+  --c-danger: #ef4444;
+
+  --r-lg: 16px;
+  --r-md: 12px;
+
+  --shadow: 0 14px 40px rgba(2, 6, 23, .10);
+  --shadow-sm: 0 8px 20px rgba(2, 6, 23, .08);
+
+  --focus: 0 0 0 4px rgba(22, 163, 74, .18);
+}
+
+.addfood-page {
+  min-height: 100vh;
+  background:
+    radial-gradient(900px 500px at 15% 0%, rgba(22, 163, 74, .10), transparent 55%),
+    radial-gradient(900px 500px at 85% 0%, rgba(249, 115, 22, .10), transparent 55%),
+    var(--c-surface);
+  padding: 24px 16px;
+  color: var(--c-text);
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+}
+
+.addfood-shell {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.addfood-card {
+  background: var(--c-card);
+  border: 1px solid var(--c-border);
+  border-radius: var(--r-lg);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.addfood-header {
+  padding: 20px 20px 14px;
+  background:
+    linear-gradient(180deg, rgba(22, 163, 74, .10), rgba(255, 255, 255, 0) 70%),
+    var(--c-bg);
+  border-bottom: 1px solid var(--c-border);
+}
+
+.addfood-title {
+  margin: 0;
+  /* font-size: 20px; */
+  /* font-weight: 800; */
+  letter-spacing: .2px;
+  background: linear-gradient(90deg, #16a34a 0%, #22c55e 40%, #f97316 75%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.addfood-subrow {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.addfood-subtitle {
+  color: var(--c-muted);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.addfood-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+  padding: 7px 10px;
+  border-radius: 999px;
+  background: rgba(249, 115, 22, .12);
+  border: 1px solid rgba(249, 115, 22, .22);
+  color: #7c2d12;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.addfood-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--c-secondary);
+  flex: 0 0 auto;
+}
+
+.addfood-badgeText {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.addfood-body {
+  padding: 18px 20px 22px;
+}
+
+.addfood-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 12px;
+}
+
+.addfood-section {
+  background: rgba(22, 163, 74, .06);
+  border: 1px solid rgba(22, 163, 74, .14);
+  border-radius: var(--r-lg);
+  padding: 14px;
+}
+
+.addfood-sectionTitle {
+  font-size: 13px;
+  font-weight: 800;
+  margin: 0 0 10px;
+  color: var(--c-text);
+}
+
+.addfood-field {
+  display: grid;
+  gap: 10px;
+}
+
+.addfood-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--c-text);
+  margin: 0 0 6px;
+}
+
+.addfood-hint {
+  margin-top: 6px;
+  font-size: 12px;
+  color: var(--c-muted);
+}
+
+.addfood-control {
+  width: 100%;
+  padding: 11px 12px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--c-border);
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-size: 14px;
+  outline: none;
+  transition: box-shadow .15s ease, border-color .15s ease, transform .05s ease;
+}
+
+.addfood-control:focus {
+  border-color: rgba(22, 163, 74, .55);
+  box-shadow: var(--focus);
+}
+
+.addfood-textarea {
+  resize: vertical;
+  min-height: 110px;
+}
+
+.addfood-actions {
+  margin-top: 4px;
+  display: flex;
+  gap: 10px;
+}
+
+.addfood-primaryBtn {
+  width: 100%;
+  padding: 12px 14px;
+  border-radius: 14px;
+  border: 1px solid rgba(0, 0, 0, .06);
+  background: linear-gradient(180deg, var(--c-primary), var(--c-primary-600));
+  color: white;
+  font-weight: 900;
+  font-size: 14px;
+  cursor: pointer;
+  box-shadow: 0 14px 26px rgba(22, 163, 74, .18);
+  transition: transform .06s ease, filter .15s ease, opacity .15s ease;
+}
+
+.addfood-primaryBtn:hover {
+  filter: brightness(1.02);
+}
+
+.addfood-primaryBtn:active {
+  transform: translateY(1px);
+}
+
+.addfood-primaryBtn:disabled {
+  opacity: .7;
+  cursor: not-allowed;
+}
+
+.addfood-foot {
+  margin-top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--c-muted);
+  font-size: 12px;
+}
+
+.addfood-accentDot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: var(--c-accent);
+  border: 1px solid rgba(0, 0, 0, .08);
+}
+
+.addfood-alert {
+  margin-top: 10px;
+  padding: 12px;
+  border-radius: var(--r-lg);
+  background: rgba(239, 68, 68, .08);
+  border: 1px solid rgba(239, 68, 68, .18);
+  color: #7f1d1d;
+  font-size: 12px;
+  line-height: 1.4;
 }
