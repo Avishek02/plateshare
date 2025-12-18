@@ -2,16 +2,15 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router-dom'
 import api from '../lib/api'
 import { success, error } from '../lib/toast'
+import { useAuth } from '../auth/AuthProvider'
 
 function DonorRequests() {
+  const { user, loading } = useAuth()
   const queryClient = useQueryClient()
 
-  const {
-    data,
-    isLoading,
-    isError
-  } = useQuery({
-    queryKey: ['donor-requests'],
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ['donor-requests', user?.email],
+    enabled: !loading && !!user,
     queryFn: async () => {
       const res = await api.get('/requests/donor')
       return res.data
@@ -40,7 +39,8 @@ function DonorRequests() {
     statusMutation.mutate({ id, status })
   }
 
-  if (isLoading) return <div style={{ padding: 16 }}>Loading...</div>
+  if (loading || isLoading) return <div style={{ padding: 16 }}>Loading...</div>
+  if (!user) return <div style={{ padding: 16 }}>Please login.</div>
   if (isError) return <div style={{ padding: 16 }}>Error loading requests</div>
 
   if (!data || data.length === 0) {
@@ -86,17 +86,13 @@ function DonorRequests() {
               <td>{r.status}</td>
               <td>
                 <button
-                  disabled={
-                    statusMutation.isPending || r.status === 'Accepted'
-                  }
+                  disabled={statusMutation.isPending || r.status === 'Accepted'}
                   onClick={() => handleStatus(r._id, 'Accepted')}
                 >
                   Accept
                 </button>{' '}
                 <button
-                  disabled={
-                    statusMutation.isPending || r.status === 'Rejected'
-                  }
+                  disabled={statusMutation.isPending || r.status === 'Rejected'}
                   onClick={() => handleStatus(r._id, 'Rejected')}
                 >
                   Reject
