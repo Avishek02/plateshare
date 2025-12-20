@@ -440,7 +440,7 @@ textarea:focus {
 
 
 
-/* updated  */
+/* add food page  */
 
 .addfood-page {
   min-height: 100vh;
@@ -486,14 +486,14 @@ textarea:focus {
 .addfood-section {
   background: rgba(22, 163, 74, .06);
   border: 1px solid rgba(22, 163, 74, .14);
-  border-radius: 16px;
+  @apply rounded-2xl;
 }
 
 .addfood-input {
   background: #ffffff;
   border-color: var(--border);
   color: var(--text);
-  @apply rounded-xl;
+  @apply w-full rounded-xl px-3 py-2;
 
 }
 
@@ -520,4 +520,12 @@ textarea:focus {
 
 input[type="file"]::file-selector-button {
   @apply rounded-lg border-none bg-white text-base;
+
 }
+
+
+
+
+
+
+/* Register page  */

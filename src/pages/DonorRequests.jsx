@@ -32,10 +32,11 @@ function DonorRequests() {
   const statusMutation = useMutation({
     mutationFn: async ({ id, status, foodId }) => {
       await api.patch(`/requests/${id}/status`, { status })
-      if (status === 'Accepted') {
-        await api.patch(`/foods/${foodId}/status`, { status: 'donated' })
+      if (status === 'Accepted' && foodId) {
+        await api.patch(`/foods/${foodId}`, { status: 'donated' })
       }
     },
+
     onSuccess: () => {
       success('Request status updated.')
       queryClient.invalidateQueries({ queryKey: ['donor-requests'] })

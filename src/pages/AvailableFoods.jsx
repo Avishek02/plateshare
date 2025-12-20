@@ -38,21 +38,21 @@ function AvailableFoods() {
   if (!data || data.length === 0) {
     return (
       <div className="px-4 py-6">
-        <h2 className="text-2xl font-semibold">Available Foods</h2>
-        <p className="mt-2 text-gray-600">No foods available.</p>
+        <h2 className="text-2xl font-semibold text-[var(--text)]">Available Foods</h2>
+        <p className="mt-2 text-[var(--text-soft)]">No foods available.</p>
       </div>
     )
   }
 
   return (
     <div className="px-4 py-6">
-      <h2 className="text-2xl font-semibold">Available Foods</h2>
+      <h2 className="text-2xl font-semibold text-[var(--text)]">Available Foods</h2>
 
       <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {data.map(item => (
           <div
             key={item._id}
-            className="rounded-lg border border-gray-200 bg-white shadow-sm"
+            className="rounded-lg border border-[var(--border)] bg-[var(--card)] shadow-sm"
           >
             {item.imageUrl && (
               <img
@@ -63,22 +63,27 @@ function AvailableFoods() {
             )}
 
             <div className="p-4">
-              <h3 className="text-lg font-semibold">{item.name}</h3>
+              <h3 className="text-lg font-semibold text-[var(--text)]">
+                {item.name}
+              </h3>
 
-              <p className="mt-1 text-sm text-gray-600">
+              <p className="mt-1 text-sm text-[var(--text-soft)]">
                 Quantity: {item.quantity || '—'}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-[var(--text-soft)]">
                 Pickup: {item.pickupLocation || '—'}
               </p>
-              <p className="text-sm text-gray-600">
-                Expire: {item.expireDate ? new Date(item.expireDate).toLocaleDateString() : '—'}
+              <p className="text-sm text-[var(--text-soft)]">
+                Expire:{' '}
+                {item.expireDate
+                  ? new Date(item.expireDate).toLocaleDateString()
+                  : '—'}
               </p>
 
               <div className="mt-4">
                 <Link
                   to={`/food/${item._id}`}
-                  className="inline-block rounded bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700"
+                  className="inline-block rounded bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--accent-strong)]"
                 >
                   View Details
                 </Link>
