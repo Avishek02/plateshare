@@ -35,62 +35,64 @@ function AvailableFoods() {
     )
   }
 
-  if (!data || data.length === 0) {
-    return (
-      <div className="px-4 py-6">
-        <h2 className="text-2xl font-semibold text-[var(--text)]">Available Foods</h2>
-        <p className="mt-2 text-[var(--text-soft)]">No foods available.</p>
-      </div>
-    )
-  }
-
   return (
-    <div className="px-4 py-6">
-      <h2 className="text-2xl font-semibold text-[var(--text)]">Available Foods</h2>
+    <div className="min-h-screen px-4 py-8 bg-[var(--bg-soft)] [background:radial-gradient(900px_500px_at_15%_0%,rgba(22,163,74,.10),transparent_55%),radial-gradient(900px_500px_at_85%_0%,rgba(249,115,22,.10),transparent_55%),var(--bg-soft)]">
+      <div className="mx-auto w-full max-w-6xl">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-3xl font-extrabold text-[var(--text)]">
+            Available Foods
+          </h2>
 
-      <div className="mt-6 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {data.map(item => (
-          <div
-            key={item._id}
-            className="rounded-lg border border-[var(--border)] bg-[var(--card)] shadow-sm"
-          >
-            {item.imageUrl && (
-              <img
-                src={item.imageUrl}
-                alt={item.name}
-                className="h-48 w-full rounded-t-lg object-cover"
-              />
-            )}
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-semibold border border-[rgba(249,115,22,.22)] bg-[rgba(249,115,22,.12)] text-[#7c2d12]">
+            <span className="inline-block size-2 rounded-full bg-[#f97316]" />
+            <span className="truncate">{data.length} items</span>
+          </div>
+        </div>
 
-            <div className="p-4">
-              <h3 className="text-lg font-semibold text-[var(--text)]">
-                {item.name}
-              </h3>
+        {data.length === 0 && (
+          <p className="text-[var(--text-soft)]">No foods available.</p>
+        )}
 
-              <p className="mt-1 text-sm text-[var(--text-soft)]">
-                Quantity: {item.quantity || '—'}
-              </p>
-              <p className="text-sm text-[var(--text-soft)]">
-                Pickup: {item.pickupLocation || '—'}
-              </p>
-              <p className="text-sm text-[var(--text-soft)]">
-                Expire:{' '}
-                {item.expireDate
-                  ? new Date(item.expireDate).toLocaleDateString()
-                  : '—'}
-              </p>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {data.map(item => (
+            <div
+              key={item._id}
+              className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_14px_40px_rgba(2,6,23,.10)] transition hover:-translate-y-[2px]"
+            >
+              {item.imageUrl && (
+                <img
+                  src={item.imageUrl}
+                  alt={item.name}
+                  className="h-48 w-full object-cover"
+                />
+              )}
 
-              <div className="mt-4">
+              <div className="grid gap-3 p-5">
+                <h3 className="text-lg font-extrabold text-[var(--text)]">
+                  {item.name}
+                </h3>
+
+                <div className="grid gap-1 text-sm text-[var(--text-soft)]">
+                  <p>Quantity: {item.quantity || '—'}</p>
+                  <p>Pickup: {item.pickupLocation || '—'}</p>
+                  <p>
+                    Expire:{' '}
+                    {item.expireDate
+                      ? new Date(item.expireDate).toLocaleDateString()
+                      : '—'}
+                  </p>
+                </div>
+
                 <Link
                   to={`/food/${item._id}`}
-                  className="inline-block rounded bg-[var(--accent)] px-4 py-2 text-sm font-medium text-white hover:bg-[var(--accent-strong)]"
+                  className="mt-3 inline-flex items-center justify-center rounded-3xl bg-[linear-gradient(180deg,#22c55e,#16a34a)] px-4 py-2 text-sm font-bold text-white shadow-[0_10px_20px_rgba(22,163,74,.18)]"
                 >
                   View Details
                 </Link>
               </div>
             </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
     </div>
   )

@@ -62,7 +62,6 @@ function AddFood() {
         }
       }
 
-
       await api.post('/foods', body)
 
       reset()
@@ -76,96 +75,89 @@ function AddFood() {
   }
 
   return (
-    <div className='addfood-page px-4 py-8'>
-      <div className='mx-auto w-full max-w-xl'>
-        <div className='card addfood-card'>
-          <div className=' gap-5 pb-5'>
-            <div className='flex flex-col gap-3 addfood-header rounded-t-2xl'>
+    <div className="min-h-screen px-4 py-8 bg-[var(--bg-soft)] [background:radial-gradient(900px_500px_at_15%_0%,rgba(22,163,74,.10),transparent_55%),radial-gradient(900px_500px_at_85%_0%,rgba(249,115,22,.10),transparent_55%),var(--bg-soft)]">
+      <div className="mx-auto w-full max-w-xl">
+        <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-[0_14px_40px_rgba(2,6,23,.10)]">
+          <div className="p-5 border-b border-[var(--border)] mb-4 [background:radial-gradient(600px_240px_at_10%_0%,rgba(34,197,94,.10),transparent_60%),radial-gradient(600px_240px_at_90%_0%,rgba(249,115,22,.10),transparent_60%),#ffffff] rounded-t-2xl">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <h2 className="text-3xl font-extrabold">Add Food</h2>
 
-              <div className='flex flex-wrap items-center justify-between gap-3 pt-5'>
-                {/* <div className='text-sm addfood-subtitle'>Donation listing form</div> */}
+              <div className="inline-flex items-center gap-2 max-w-full rounded-full px-4 py-3 font-semibold border border-[rgba(249,115,22,.22)] bg-[rgba(249,115,22,.12)] text-[#7c2d12]">
+                <span className="inline-block size-2 rounded-full bg-[#f97316]" />
+                <span className="truncate">Donor: {user?.email || ''}</span>
+              </div>
+            </div>
+          </div>
 
-                <h2 className='text-3xl font-extrabold addfood-title `'>Add Food</h2>
+          <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 px-5 pb-6">
+            <div className="grid gap-3 p-4 rounded-2xl border border-[rgba(22,163,74,.14)] bg-[rgba(22,163,74,.06)]">
+              <div className="text-base font-extrabold text-[var(--text)]">Food details</div>
 
-                <div className='badge badge-outline gap-2 max-w-full addfood-badge'>
-                  <span className='inline-block size-2 rounded-full addfood-dot' />
-                  <span className='truncate'>Donor: {user?.email || ''}</span>
-                </div>
+              <input
+                className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] placeholder:text-[var(--text-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
+                placeholder="Food Name"
+                {...register('name', { required: true })}
+              />
+
+              <input
+                className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] placeholder:text-[var(--text-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
+                placeholder="Food Quantity (e.g. Serves 2 people)"
+                {...register('quantity', { required: true })}
+              />
+
+              <input
+                className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] placeholder:text-[var(--text-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
+                placeholder="Pickup Location"
+                {...register('pickupLocation', { required: true })}
+              />
+
+              <div className="grid gap-2">
+                <div className="text-base font-extrabold text-[var(--text)]">Expire date</div>
+                <input
+                  className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] placeholder:text-[var(--text-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
+                  type="date"
+                  {...register('expireDate', { required: true })}
+                  min={new Date().toISOString().split('T')[0]}
+                />
               </div>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className='grid gap-4 px-5 py-5'>
-              <div className='grid gap-3 p-4 addfood-section'>
-                <div className='text-base font-extrabold text-slate-900'>Food details</div>
+            <div className="grid gap-3 p-4 rounded-2xl border border-[rgba(22,163,74,.14)] bg-[rgba(22,163,74,.06)]">
+              <div className="text-base font-extrabold text-[var(--text)]">Image</div>
 
-                <input
-                  className='input input-bordered w-full addfood-input'
-                  placeholder='Food Name'
-                  {...register('name', { required: true })}
-                />
+              <input
+                className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[var(--text-soft)]"
+                type="file"
+                accept="image/*"
+                {...register('imageFile', { required: true })}
+              />
 
-                <input
-                  className='input input-bordered w-full addfood-input'
-                  placeholder='Food Quantity (e.g. Serves 2 people)'
-                  {...register('quantity', { required: true })}
-                />
+              <input type="hidden" {...register('imageUrl')} />
+            </div>
 
-                <input
-                  className='input input-bordered w-full addfood-input'
-                  placeholder='Pickup Location'
-                  {...register('pickupLocation', { required: true })}
-                />
+            <div className="grid gap-3 p-4 rounded-2xl border border-[rgba(22,163,74,.14)] bg-[rgba(22,163,74,.06)]">
+              <div className="text-base font-extrabold text-[var(--text)]">Additional notes</div>
 
-                <div className='grid gap-2'>
-                  <div className='text-base font-extrabold text-slate-700'>Expire date</div>
-                  <input
-                    className='input input-bordered w-full addfood-input'
-                    type='date'
-                    {...register('expireDate', { required: true })}
-                    min={new Date().toISOString().split('T')[0]}
-                  />
-                </div>
-              </div>
+              <textarea
+                className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] placeholder:text-[var(--text-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
+                placeholder="Additional Notes"
+                rows={4}
+                {...register('notes')}
+              />
+            </div>
 
-              <div className='grid gap-3 p-4 addfood-section'>
-                <div className='text-base font-extrabold text-slate-900'>Image</div>
-
-                <input
-                  className='file-input file-input-bordered w-full addfood-input'
-                  type='file'
-                  accept='image/*'
-                  {...register('imageFile', { required: true })}
-                />
-
-                <input type='hidden' {...register('imageUrl')} />
-              </div>
-
-              <div className='grid gap-3 p-4 addfood-section'>
-                <div className='text-base font-extrabold text-slate-900'>Additional notes</div>
-
-                <textarea
-                  className='textarea textarea-bordered w-full addfood-input'
-                  placeholder='Additional Notes'
-                  rows={4}
-                  {...register('notes')}
-                />
-              </div>
-
-              <button
-                type='submit'
-                disabled={submitting || formState.isSubmitting}
-                className='btn w-full font-extrabold addfood-btn'
-              >
-                {submitting ? 'Adding...' : 'Add Food'}
-              </button>
-            </form>
-          </div>
+            <button
+              type="submit"
+              disabled={submitting || formState.isSubmitting}
+              className="w-full rounded-3xl bg-[linear-gradient(180deg,#22c55e,#16a34a)] px-4 py-3 text-lg font-bold text-white shadow-[0_14px_26px_rgba(22,163,74,.18)] disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {submitting ? 'Adding...' : 'Add Food'}
+            </button>
+          </form>
         </div>
       </div>
     </div>
   )
-
-
 }
 
 export default AddFood

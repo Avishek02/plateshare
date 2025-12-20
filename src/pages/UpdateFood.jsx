@@ -12,6 +12,8 @@ function UpdateFood() {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
 
+  const token = localStorage.getItem('token')
+
   const { register, handleSubmit, reset } = useForm()
 
   const {
@@ -20,9 +22,11 @@ function UpdateFood() {
     isError
   } = useQuery({
     queryKey: ['food', id],
-    enabled: !!id,
+    enabled: !!id && !!token,
     queryFn: async () => {
-      const res = await api.get(`/foods/${id}`)
+      const res = await api.get(`/foods/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       return res.data
     },
     retry: 1
@@ -51,7 +55,10 @@ function UpdateFood() {
         expireDate: values.expireDate,
         notes: values.notes || ''
       }
-      await api.patch(`/foods/${id}`, body)
+
+      await api.patch(`/foods/${id}`, body, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
     },
     onSuccess: () => {
       success('Food updated successfully.')
@@ -82,59 +89,79 @@ function UpdateFood() {
   }
 
   return (
-    <div className="px-4 py-6 flex justify-center">
-      <div className="w-full max-w-md rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
-        <h2 className="text-2xl font-semibold">Update Food</h2>
+    <div className="min-h-screen px-4 py-8 bg-[var(--bg-soft)] [background:radial-gradient(900px_500px_at_15%_0%,rgba(22,163,74,.10),transparent_55%),radial-gradient(900px_500px_at_85%_0%,rgba(249,115,22,.10),transparent_55%),var(--bg-soft)]">
+      <div className="mx-auto w-full max-w-xl">
+        <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-[0_14px_40px_rgba(2,6,23,.10)]">
+          <div className="p-5 border-b border-[var(--border)] mb-4 [background:radial-gradient(600px_240px_at_10%_0%,rgba(34,197,94,.10),transparent_60%),radial-gradient(600px_240px_at_90%_0%,rgba(249,115,22,.10),transparent_60%),#ffffff] rounded-t-2xl">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+              <h2 className="text-3xl font-extrabold text-[var(--text)]">
+                Update Food
+              </h2>
 
-        <form
-          onSubmit={handleSubmit(onSubmit)}
-          className="mt-4 flex flex-col gap-3"
-        >
-          <input
-            className="rounded border border-gray-300 px-3 py-2"
-            placeholder="Food Name"
-            {...register('name', { required: true })}
-          />
+              <div className="inline-flex items-center gap-2 max-w-full rounded-full px-4 py-3 font-semibold border border-[rgba(249,115,22,.22)] bg-[rgba(249,115,22,.12)] text-[#7c2d12]">
+                <span className="inline-block size-2 rounded-full bg-[#f97316]" />
+                <span className="truncate">Edit details</span>
+              </div>
+            </div>
+          </div>
 
-          <input
-            className="rounded border border-gray-300 px-3 py-2"
-            placeholder="Image URL"
-            {...register('imageUrl', { required: true })}
-          />
+          <form onSubmit={handleSubmit(onSubmit)} className="grid gap-4 px-5 pb-6">
+            <div className="grid gap-3 p-4 rounded-2xl border border-[rgba(22,163,74,.14)] bg-[rgba(22,163,74,.06)]">
+              <div className="text-base font-extrabold text-[var(--text)]">Food details</div>
 
-          <input
-            className="rounded border border-gray-300 px-3 py-2"
-            placeholder="Quantity (e.g. Serves 2 people)"
-            {...register('quantity', { required: true })}
-          />
+              <input
+                className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] placeholder:text-[var(--text-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
+                placeholder="Food Name"
+                {...register('name', { required: true })}
+              />
 
-          <input
-            className="rounded border border-gray-300 px-3 py-2"
-            placeholder="Pickup Location"
-            {...register('pickupLocation', { required: true })}
-          />
+              <input
+                className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] placeholder:text-[var(--text-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
+                placeholder="Image URL"
+                {...register('imageUrl', { required: true })}
+              />
 
-          <input
-            type="date"
-            className="rounded border border-gray-300 px-3 py-2"
-            {...register('expireDate', { required: true })}
-          />
+              <input
+                className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] placeholder:text-[var(--text-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
+                placeholder="Quantity (e.g. Serves 2 people)"
+                {...register('quantity', { required: true })}
+              />
 
-          <textarea
-            rows={3}
-            className="rounded border border-gray-300 px-3 py-2"
-            placeholder="Additional Notes"
-            {...register('notes')}
-          />
+              <input
+                className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] placeholder:text-[var(--text-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
+                placeholder="Pickup Location"
+                {...register('pickupLocation', { required: true })}
+              />
 
-          <button
-            type="submit"
-            disabled={mutation.isPending}
-            className="mt-2 rounded bg-blue-600 px-4 py-2 font-medium text-white hover:bg-blue-700 disabled:opacity-50"
-          >
-            {mutation.isPending ? 'Updating...' : 'Update Food'}
-          </button>
-        </form>
+              <div className="grid gap-2">
+                <div className="text-base font-extrabold text-[var(--text)]">Expire date</div>
+                <input
+                  type="date"
+                  className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
+                  {...register('expireDate', { required: true })}
+                />
+              </div>
+
+              <div className="grid gap-2">
+                <div className="text-base font-extrabold text-[var(--text)]">Additional notes</div>
+                <textarea
+                  rows={3}
+                  className="w-full rounded-xl border border-[var(--border)] bg-white px-3 py-2 text-[var(--text)] placeholder:text-[var(--text-soft)] focus:outline-none focus:ring-2 focus:ring-[var(--accent-soft)]"
+                  placeholder="Additional Notes"
+                  {...register('notes')}
+                />
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              disabled={mutation.isPending || !token}
+              className="w-full rounded-3xl bg-[linear-gradient(180deg,#22c55e,#16a34a)] px-4 py-3 text-lg font-bold text-white shadow-[0_14px_26px_rgba(22,163,74,.18)] disabled:opacity-60 disabled:cursor-not-allowed"
+            >
+              {mutation.isPending ? 'Updating...' : 'Update Food'}
+            </button>
+          </form>
+        </div>
       </div>
     </div>
   )
