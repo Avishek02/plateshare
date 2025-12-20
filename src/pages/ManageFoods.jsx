@@ -70,7 +70,7 @@ function ManageFoods() {
     <div className="min-h-screen px-4 py-8 bg-[var(--bg-soft)] [background:radial-gradient(900px_500px_at_15%_0%,rgba(22,163,74,.10),transparent_55%),radial-gradient(900px_500px_at_85%_0%,rgba(249,115,22,.10),transparent_55%),var(--bg-soft)]">
       <div className="mx-auto w-full max-w-6xl">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-3xl font-extrabold text-[var(--text)]">Manage My Foods</h2>
+          <h2 className="text-3xl font-extrabold text-[var(--text)]">My Foods</h2>
 
           <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-semibold border border-[rgba(249,115,22,.22)] bg-[rgba(249,115,22,.12)] text-[#7c2d12]">
             <span className="inline-block size-2 rounded-full bg-[#f97316]" />
@@ -93,7 +93,7 @@ function ManageFoods() {
     <th className="p-4 text-left text-sm font-extrabold text-[var(--text)]">Pickup</th>
     <th className="p-4 text-left text-sm font-extrabold text-[var(--text)]">Status</th>
     <th className="p-4 text-left text-sm font-extrabold text-[var(--text)]">Expire Date</th>
-    <th className="p-4 text-left text-sm font-extrabold text-[var(--text)]">Actions</th>
+    <th className="p-4 text-left text-sm font-extrabold text-[var(--text)] !text-center">Actions</th>
   </tr>
 </thead>
 
@@ -112,17 +112,17 @@ function ManageFoods() {
                           {item.expireDate ? new Date(item.expireDate).toLocaleDateString() : '—'}
                         </td>
                         <td className="p-4">
-                          <div className="flex flex-wrap gap-2">
+                          <div className="flex flex-wrap justify-center gap-2">
                             <Link
                               to={`/food/${item._id}`}
-                              className="inline-flex items-center justify-center rounded-2xl border border-[var(--border)] bg-white px-3 py-2 text-sm font-bold text-[var(--text)] shadow-[0_10px_24px_rgba(2,6,23,.08)] hover:-translate-y-[1px] transition"
+                              className="inline-flex items-center justify-center rounded-2xl border border-[var(--border)] bg-white px-3 py-1 text-sm font-bold text-[var(--text)] shadow-[0_10px_24px_rgba(2,6,23,.08)] hover:-translate-y-[1px] transition"
                             >
                               View
                             </Link>
 
                             <Link
                               to={`/update-food/${item._id}`}
-                              className="inline-flex items-center justify-center rounded-2xl border border-[var(--border)] bg-white px-3 py-2 text-sm font-bold text-[var(--text)] shadow-[0_10px_24px_rgba(2,6,23,.08)] hover:-translate-y-[1px] transition"
+                              className="inline-flex items-center justify-center rounded-2xl border border-[var(--border)] bg-white px-3 py-1 text-sm font-bold text-[var(--text)] shadow-[0_10px_24px_rgba(2,6,23,.08)] hover:-translate-y-[1px] transition"
                             >
                               Update
                             </Link>
@@ -130,7 +130,7 @@ function ManageFoods() {
                             <button
                               onClick={() => handleDelete(item._id)}
                               disabled={isDeleting}
-                              className="inline-flex items-center justify-center rounded-2xl border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.10)] px-3 py-2 text-sm font-extrabold text-[var(--danger)] disabled:opacity-60 disabled:cursor-not-allowed"
+                              className="inline-flex items-center justify-center rounded-2xl border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.10)] px-3 py-1 text-xs font-extrabold text-[var(--danger)] disabled:opacity-60 disabled:cursor-not-allowed"
                             >
                               {isDeleting ? 'Deleting...' : 'Delete'}
                             </button>

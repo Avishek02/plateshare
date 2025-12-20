@@ -2,7 +2,9 @@
 @plugin "daisyui";
 
 
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
 }
 
@@ -12,13 +14,14 @@ html, body, #root {
   flex-direction: column;
 }
 
-.app-root > main,
-.app-root > .content {
+.app-root>main,
+.app-root>.content {
   flex: 1;
 }
 
 
 :root {
+  /* main color  */
   --bg: #ffffff;
   --bg-soft: #f9fafb;
 
@@ -31,9 +34,43 @@ html, body, #root {
 
   --card: #ffffff;
   --border: #e5e7eb;
-
   --danger: #ef4444;
+
+
+
+
+
+
+  /* Action buttons */
+  --accept-action-bg: #e6f4ea;
+  --accept-action-text: #1e7e34;
+  --accept-action-hover: #d4edda;
+
+  --reject-action-bg: #fdecea;
+  --reject-action-text: #c92a2a;
+  --reject-action-hover: #f8d7da;
+
+
+  /* Status badges */
+  --pending-status-bg: #fff4e5;
+  --pending-status-text: #b26a00;
+
+  --accepted-status-bg: #e6f4ea;
+  --accepted-status-text: #1e7e34;
+
+  --rejected-status-bg: #fdecea;
+  --rejected-status-text: #c92a2a;
+
+
+
+
+  /* Stock status colors */
+  --stock-status-01: #6b778c;
+  --stock-status-02: #e6f4ea;
+  --stock-status-03: #1e7e34;
+
 }
+
 
 * {
   box-sizing: border-box

@@ -63,17 +63,21 @@ function AvailableFoods() {
                 <img
                   src={item.imageUrl}
                   alt={item.name}
-                  className="h-48 w-full object-cover"
+                  className="h-60 w-full object-cover"
                 />
               )}
 
-              <div className="grid gap-3 p-5">
-                <h3 className="text-lg font-extrabold text-[var(--text)]">
-                  {item.name}
-                </h3>
+              <div className="p-5">
 
-                <div className="grid gap-1 text-sm text-[var(--text-soft)]">
+                <div className='flex justify-between items-center mb-2'>
+                  <h3 className="text-lg font-extrabold text-[var(--accent)]">
+                    {item.name}
+                  </h3>
                   <p>Quantity: {item.quantity || '—'}</p>
+                </div>
+
+
+                <div className="flex justify-between items-center text-sm text-[var(--text-soft)] mb-2">
                   <p>Pickup: {item.pickupLocation || '—'}</p>
                   <p>
                     Expire:{' '}
@@ -83,9 +87,10 @@ function AvailableFoods() {
                   </p>
                 </div>
 
+
                 <Link
                   to={`/food/${item._id}`}
-                  className="mt-3 inline-flex items-center justify-center rounded-3xl bg-[linear-gradient(180deg,#22c55e,#16a34a)] px-4 py-2 text-sm font-bold text-white shadow-[0_10px_20px_rgba(22,163,74,.18)]"
+                  className="mt-3 inline-flex items-center justify-center rounded-3xl bg-[linear-gradient(180deg,#22c55e,#16a34a)] px-4 py-2 text-sm font-bold !text-white shadow-[0_10px_20px_rgba(22,163,74,.18)]"
                 >
                   View Details
                 </Link>

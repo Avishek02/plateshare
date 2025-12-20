@@ -10,11 +10,7 @@ import ErrorState from '../components/ErrorState'
 function MyRequests() {
   const { user, loading } = useAuth()
 
-  const {
-    data = [],
-    isLoading,
-    isError
-  } = useQuery({
+  const { data = [], isLoading, isError } = useQuery({
     queryKey: ['my-requests', user?.email],
     enabled: !loading && !!user?.email,
     queryFn: async () => {
@@ -32,9 +28,10 @@ function MyRequests() {
 
   if (!user) {
     return (
-      <div className="px-4 py-6">
-        <ErrorState title="My Requests" message="Please login to view your requests." />
-      </div>
+      <ErrorState
+        title="My Requests"
+        message="Please login to view your requests."
+      />
     )
   }
 
@@ -47,59 +44,104 @@ function MyRequests() {
     )
   }
 
-  if (!data || data.length === 0) {
-    return (
-      <div className="px-4 py-6">
-        <h2 className="text-2xl font-semibold">My Requests</h2>
-        <p className="mt-2 text-gray-600">You have not requested any food yet.</p>
-      </div>
-    )
-  }
-
   return (
-    <div className="px-4 py-6">
-      <h2 className="text-2xl font-semibold">My Requests</h2>
+    <div className="min-h-screen px-4 py-8 bg-[var(--bg-soft)] [background:radial-gradient(900px_500px_at_15%_0%,rgba(22,163,74,.10),transparent_55%),radial-gradient(900px_500px_at_85%_0%,rgba(249,115,22,.10),transparent_55%),var(--bg-soft)]">
+      <div className="mx-auto w-full max-w-6xl">
+        <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-3xl font-extrabold text-[var(--text)]">
+            My Requests
+          </h2>
 
-      <div className="mt-4 overflow-x-auto rounded-lg border border-gray-200 bg-white">
-        <table className="min-w-[900px] w-full text-left text-sm">
-          <thead className="bg-gray-50 text-gray-700">
-            <tr>
-              <th className="px-4 py-3 font-medium">Food</th>
-              <th className="px-4 py-3 font-medium">Donor</th>
-              <th className="px-4 py-3 font-medium">Location</th>
-              <th className="px-4 py-3 font-medium">Reason</th>
-              <th className="px-4 py-3 font-medium">Contact</th>
-              <th className="px-4 py-3 font-medium">Status</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-gray-200">
-            {data.map(r => (
-              <tr key={r._id} className="hover:bg-gray-50">
-                <td className="px-4 py-3">
-                  {r.food?._id ? (
-                    <Link
-                      className="text-blue-600 hover:underline"
-                      to={`/food/${r.food._id}`}
-                    >
-                      {r.food?.name || 'View Food'}
-                    </Link>
-                  ) : (
-                    <span className="text-gray-500">Food not available</span>
-                  )}
-                </td>
-                <td className="px-4 py-3">{r.donorEmail || '—'}</td>
-                <td className="px-4 py-3">{r.location || '—'}</td>
-                <td className="px-4 py-3">{r.reason || '—'}</td>
-                <td className="px-4 py-3">{r.contactNo || '—'}</td>
-                <td className="px-4 py-3">
-                  <span className="inline-flex items-center rounded-full bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700">
-                    {r.status || 'pending'}
-                  </span>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+          <div className="inline-flex items-center gap-2 rounded-full px-4 py-2 font-semibold border border-[rgba(249,115,22,.22)] bg-[rgba(249,115,22,.12)] text-[#7c2d12]">
+            <span className="inline-block size-2 rounded-full bg-[#f97316]" />
+            <span className="truncate">{data.length} requests</span>
+          </div>
+        </div>
+
+        {data.length === 0 ? (
+          <div className="rounded-2xl border border-[var(--border)] bg-[var(--card)] p-6 shadow-[0_14px_40px_rgba(2,6,23,.10)]">
+            <p className="text-[var(--text-soft)]">
+              You have not requested any food yet.
+            </p>
+          </div>
+        ) : (
+          <div className="overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_14px_40px_rgba(2,6,23,.10)]">
+            <div className="overflow-x-auto">
+              <table className="min-w-[900px] w-full text-left text-sm">
+                <thead>
+                  <tr className="[background:radial-gradient(600px_240px_at_10%_0%,rgba(34,197,94,.10),transparent_60%),radial-gradient(600px_240px_at_90%_0%,rgba(249,115,22,.10),transparent_60%),#ffffff]">
+                    <th className="p-4 font-extrabold text-[var(--text)]">Food</th>
+                    <th className="p-4 font-extrabold text-[var(--text)]">Donor</th>
+                    <th className="p-4 font-extrabold text-[var(--text)]">Location</th>
+                    <th className="p-4 font-extrabold text-[var(--text)]">Reason</th>
+                    <th className="p-4 font-extrabold text-[var(--text)]">Contact</th>
+                    <th className="p-4 font-extrabold text-[var(--text)]">Status</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {data.map(r => {
+                    const st = (r.status || '').toLowerCase()
+
+                    return (
+                      <tr
+                        key={r._id}
+                        className="border-t border-[var(--border)]"
+                      >
+                        <td className="p-4 font-semibold text-[var(--text)]">
+                          {r.food?._id ? (
+                            <Link
+                              to={`/food/${r.food._id}`}
+                              className="text-[var(--accent)] hover:underline"
+                            >
+                              {r.food?.name || 'View Food'}
+                            </Link>
+                          ) : (
+                            '—'
+                          )}
+                        </td>
+                        <td className="p-4 text-[var(--text-soft)]">
+                          {r.donorEmail || '—'}
+                        </td>
+                        <td className="p-4 text-[var(--text-soft)]">
+                          {r.location || '—'}
+                        </td>
+                        <td className="p-4 text-[var(--text-soft)]">
+                          {r.reason || '—'}
+                        </td>
+                        <td className="p-4 text-[var(--text-soft)]">
+                          {r.contactNo || '—'}
+                        </td>
+
+                        <td className="p-4">
+                          <span
+                            className="inline-flex rounded-full border border-[var(--border)] px-3 py-1 text-xs font-bold capitalize"
+                            style={{
+                              backgroundColor:
+                                st === 'accepted'
+                                  ? 'var(--accepted-status-bg)'
+                                  : st === 'rejected'
+                                    ? 'var(--rejected-status-bg)'
+                                    : 'var(--pending-status-bg)',
+                              color:
+                                st === 'accepted'
+                                  ? 'var(--accepted-status-text)'
+                                  : st === 'rejected'
+                                    ? 'var(--rejected-status-text)'
+                                    : 'var(--pending-status-text)'
+                            }}
+                          >
+                            {st || 'pending'}
+                          </span>
+                        </td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   )

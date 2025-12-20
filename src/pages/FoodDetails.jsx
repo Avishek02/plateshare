@@ -13,29 +13,36 @@ function FoodDetails() {
   const { user } = useAuth()
   const queryClient = useQueryClient()
   const [isModalOpen, setIsModalOpen] = useState(false)
-
+  const token = localStorage.getItem('token')
   const { register, handleSubmit, reset } = useForm()
 
   const foodQuery = useQuery({
     queryKey: ['food', id],
-    enabled: !!id,
+    enabled: !!id && !!token,
     queryFn: async () => {
-      const res = await api.get(`/foods/${id}`)
+      const res = await api.get(`/foods/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      })
       return res.data
     },
     retry: 1
   })
 
   const food = foodQuery.data
-  const isDonor = useMemo(() => {
-    return !!user && !!food?.donor?.email && food.donor.email === user.email
-  }, [user, food])
+
+  const isDonor = useMemo(
+    () => !!user && food?.donor?.email === user.email,
+    [user, food]
+  )
 
   const requestsQuery = useQuery({
     queryKey: ['food-requests', id],
-    enabled: !!id && !!user && isDonor,
+    enabled: !!id && !!token && !!user && isDonor,
     queryFn: async () => {
-      const res = await api.get(`/requests/food/${id}`)
+      const res = await api.get('/requests', {
+        params: { foodId: id },
+        headers: { Authorization: `Bearer ${token}` }
+      })
       return Array.isArray(res.data) ? res.data : []
     },
     retry: 1
@@ -51,35 +58,43 @@ function FoodDetails() {
 
   const requestMutation = useMutation({
     mutationFn: async values => {
-      const payload = {
-        foodId: id,
-        requesterEmail: user?.email || '',
-        requesterName: user?.displayName || '',
-        requesterPhoto: user?.photoURL || '',
-        location: values.location,
-        reason: values.reason,
-        contactNo: values.contactNo,
-        status: 'pending'
-      }
-      await api.post('/requests', payload)
+      await api.post(
+        '/requests',
+        {
+          foodId: id,
+          location: values.location,
+          reason: values.reason,
+          contactNo: values.contactNo
+        },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
     },
     onSuccess: () => {
       reset()
       setIsModalOpen(false)
       success('Request submitted successfully.')
       queryClient.invalidateQueries({ queryKey: ['my-requests'] })
+      queryClient.invalidateQueries({ queryKey: ['food-requests', id] })
     },
     onError: err => {
-      const msg = err?.response?.data?.message || 'Request failed.'
-      error(msg)
+      error(err?.response?.data?.message || 'Request failed.')
     }
   })
 
   const statusMutation = useMutation({
     mutationFn: async ({ requestId, status }) => {
-      await api.patch(`/requests/${requestId}/status`, { status })
+      await api.patch(
+        `/requests/${requestId}/status`,
+        { status },
+        { headers: { Authorization: `Bearer ${token}` } }
+      )
+
       if (status === 'accepted') {
-        await api.patch(`/foods/${id}/status`, { status: 'donated' })
+        await api.patch(
+          `/foods/${id}/status`,
+          { status: 'donated' },
+          { headers: { Authorization: `Bearer ${token}` } }
+        )
       }
     },
     onSuccess: () => {
@@ -92,14 +107,9 @@ function FoodDetails() {
       queryClient.invalidateQueries({ queryKey: ['food', id] })
     },
     onError: err => {
-      const msg = err?.response?.data?.message || 'Failed to update request status.'
-      error(msg)
+      error(err?.response?.data?.message || 'Failed to update request status.')
     }
   })
-
-  const onSubmit = values => {
-    requestMutation.mutate(values)
-  }
 
   if (foodQuery.isLoading) return <Loading />
 
@@ -108,152 +118,180 @@ function FoodDetails() {
       <ErrorState
         title="Food Details"
         message="Something went wrong while loading this food."
-        onRetry={() => queryClient.invalidateQueries({ queryKey: ['food', id] })}
       />
     )
   }
 
-  const canRequest = !isDonor && !!user && (food.status || '').toLowerCase() === 'available'
+  const canRequest =
+    !isDonor && !!user && (food.status || '').toLowerCase() === 'available'
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-semibold">{food.name}</h2>
+    <div className="min-h-screen px-4 py-8 bg-[var(--bg-soft)] [background:radial-gradient(900px_500px_at_15%_0%,rgba(22,163,74,.10),transparent_55%),radial-gradient(900px_500px_at_85%_0%,rgba(249,115,22,.10),transparent_55%),var(--bg-soft)]">
+      <div className="mx-auto w-full max-w-3xl">
+        <div className="bg-[var(--card)] border border-[var(--border)] rounded-2xl shadow-[0_14px_40px_rgba(2,6,23,.10)]">
+          <div className="p-5 border-b border-[var(--border)] mb-4 [background:radial-gradient(600px_240px_at_10%_0%,rgba(34,197,94,.10),transparent_60%),radial-gradient(600px_240px_at_90%_0%,rgba(249,115,22,.10),transparent_60%),#ffffff] rounded-t-2xl">
+            <div className="flex flex-wrap items-center justify-between gap-3">
+              <h2 className="text-3xl font-extrabold text-[var(--accent)]">{food.name}</h2>
 
-      {food.imageUrl && (
-        <img
-          src={food.imageUrl}
-          alt={food.name}
-          className="mb-3 block w-full max-w-[420px] rounded-lg object-cover"
-        />
-      )}
 
-      <p className="mt-3">Quantity: {food.quantity || '—'}</p>
-      <p>Pickup Location: {food.pickupLocation || '—'}</p>
-      <p>Expire Date: {food.expireDate ? new Date(food.expireDate).toLocaleDateString() : '—'}</p>
-      <p>Status: {food.status || '—'}</p>
-      <p>Notes: {food.notes || 'N/A'}</p>
-      <p>Donor: {food.donor?.name || food.donor?.email || '—'}</p>
+              <span className="inline-flex rounded-full px-4 py-1.5 font-semibold border border-[rgba(249,115,22,.22)] bg-[rgba(249,115,22,.12)] text-[#7c2d12]">
+                <span className="inline-block size-2 rounded-full bg-[#f97316]" />
 
-      {!isDonor && user && (
-        <div className="mt-4">
-          <button
-            onClick={() => setIsModalOpen(true)}
-            disabled={!canRequest}
-            className="rounded-md bg-black px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {canRequest ? 'Request Food' : 'Not Available'}
-          </button>
-        </div>
-      )}
+                <span className='truncate'>{food.status}</span>
+              </span>
 
-      {isModalOpen && (
-        <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 p-4"
-          onClick={() => {
-            reset()
-            setIsModalOpen(false)
-          }}
-        >
-          <div
-            className="w-full max-w-[420px] rounded-xl bg-white p-4"
-            onClick={e => e.stopPropagation()}
-          >
-            <h3 className="text-lg font-semibold">Request Food</h3>
+            </div>
+          </div>
 
-            <form
-              onSubmit={handleSubmit(onSubmit)}
-              className="mt-3 flex flex-col gap-2.5"
-            >
-              <input
-                placeholder="Write Location"
-                {...register('location', { required: true })}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-black"
+          <div className="grid gap-5 px-5 pb-10">
+            {food.imageUrl && (
+              <img
+                src={food.imageUrl}
+                alt={food.name}
+                className="w-full rounded-2xl object-cover max-h-[420px]"
               />
-              <textarea
-                rows={3}
-                placeholder="Why Need Food"
-                {...register('reason', { required: true })}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-black"
-              />
-              <input
-                placeholder="Contact No."
-                {...register('contactNo', { required: true })}
-                className="w-full rounded-md border border-gray-300 px-3 py-2 outline-none focus:border-black"
-              />
+            )}
 
-              <div className="mt-1.5 flex flex-wrap gap-2.5">
-                <button
-                  type="submit"
-                  disabled={requestMutation.isPending}
-                  className="rounded-md bg-black px-4 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60"
-                >
-                  {requestMutation.isPending ? 'Submitting...' : 'Submit Request'}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    reset()
-                    setIsModalOpen(false)
-                  }}
-                  className="rounded-md border border-gray-300 px-4 py-2"
-                >
-                  Cancel
-                </button>
-              </div>
-            </form>
+            <div className="grid gap-2 text-[var(--text)] mt-10">
+              <p><span className='font-medium'>Quantity</span> : {food.quantity || '—'}</p>
+              <p><span className='font-medium'>Pickup Location</span> : {food.pickupLocation || '—'}</p>
+              <p>
+                <span className='font-medium'>Expire Date</span> :{' '}
+                {food.expireDate
+                  ? new Date(food.expireDate).toLocaleDateString()
+                  : '—'}
+              </p>
+              <p>
+                <span className='font-medium'>Notes</span> : {food.notes || 'N/A'}</p>
+              <p><span className='font-medium'>Donor</span> : {food.donor?.name || food.donor?.email || '—'}</p>
+            </div>
+
+            {!isDonor && user && (
+              <button
+                disabled={!canRequest}
+                onClick={() => setIsModalOpen(true)}
+                className="w-full rounded-3xl bg-[linear-gradient(180deg,#22c55e,#16a34a)] px-4 py-3 text-lg font-bold text-white disabled:opacity-60"
+              >
+                {canRequest ? 'Request Food' : 'Not Available'}
+              </button>
+            )}
           </div>
         </div>
-      )}
 
-      {isDonor && (
-        <div className="mt-6">
-          <h3 className="text-lg font-semibold">Requests for this food</h3>
+        {isModalOpen && (
+          <div
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/35 p-4"
+            onClick={() => {
+              reset()
+              setIsModalOpen(false)
+            }}
+          >
+            <div
+              onClick={e => e.stopPropagation()}
+              className="w-full max-w-md rounded-2xl bg-white p-5"
+            >
+              <h3 className="text-xl font-extrabold mb-3">Request Food</h3>
+              <form
+                onSubmit={handleSubmit(v => requestMutation.mutate(v))}
+                className="grid gap-3"
+              >
+                <input
+                  {...register('location', { required: true })}
+                  placeholder="Location"
+                  className="w-full rounded-xl border border-[var(--border)] px-3 py-2"
+                />
+                <textarea
+                  {...register('reason', { required: true })}
+                  rows={3}
+                  placeholder="Reason"
+                  className="w-full rounded-xl border border-[var(--border)] px-3 py-2"
+                />
+                <input
+                  {...register('contactNo', { required: true })}
+                  placeholder="Contact No"
+                  className="w-full rounded-xl border border-[var(--border)] px-3 py-2"
+                />
+                <div className="flex gap-2">
+                  <button
+                    type="submit"
+                    disabled={requestMutation.isPending}
+                    className="flex-1 rounded-2xl bg-[linear-gradient(180deg,#22c55e,#16a34a)] px-4 py-2 font-bold text-white"
+                  >
+                    {requestMutation.isPending ? 'Submitting...' : 'Submit'}
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      reset()
+                      setIsModalOpen(false)
+                    }}
+                    className="flex-1 rounded-2xl border border-[var(--border)] px-4 py-2 font-bold"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
-          {requestsQuery.isLoading && <Loading />}
-
-          {!requestsQuery.isLoading && (!requestsQuery.data || requestsQuery.data.length === 0) && (
-            <p className="mt-2">No requests yet.</p>
-          )}
-
-          {!requestsQuery.isLoading && requestsQuery.data && requestsQuery.data.length > 0 && (
-            <div className="mt-3 overflow-x-auto">
-              <table className="w-full min-w-[900px] border-collapse">
+        {isDonor && (
+          <div className="mt-6 rounded-2xl border border-[var(--border)] bg-[var(--card)] shadow-[0_14px_40px_rgba(2,6,23,.10)] overflow-hidden">
+            <div className="[background:radial-gradient(600px_240px_at_10%_0%,rgba(34,197,94,.10),transparent_60%),radial-gradient(600px_240px_at_90%_0%,rgba(249,115,22,.10),transparent_60%),#ffffff] p-4 font-extrabold">
+              Requests
+            </div>
+            <div className="overflow-x-auto">
+              <table className="min-w-[400px] w-full text-sm">
                 <thead>
                   <tr className="border-b">
-                    <th className="p-2.5 text-left">Requester</th>
-                    <th className="p-2.5 text-left">Email</th>
-                    <th className="p-2.5 text-left">Location</th>
-                    <th className="p-2.5 text-left">Reason</th>
-                    <th className="p-2.5 text-left">Contact</th>
-                    <th className="p-2.5 text-left">Status</th>
-                    <th className="p-2.5 text-left">Actions</th>
+                    <th className="p-3 text-left">Requester</th>
+                    <th className="p-3 text-left">Email</th>
+                    <th className="p-3 text-left">Location</th>
+                    <th className="p-3 text-left">Reason</th>
+                    <th className="p-3 text-left">Contact</th>
+                    <th className="p-3 text-left">Status</th>
+                    <th className="p-3 text-left">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {requestsQuery.data.map(r => {
+                  {requestsQuery.data?.map(r => {
                     const st = (r.status || '').toLowerCase()
-                    const disabled = statusMutation.isPending || st === 'accepted' || st === 'rejected'
+                    const disabled =
+                      statusMutation.isPending ||
+                      st === 'accepted' ||
+                      st === 'rejected'
+
                     return (
                       <tr key={r._id} className="border-b">
-                        <td className="p-2.5">{r.requesterName || '—'}</td>
-                        <td className="p-2.5">{r.requesterEmail || '—'}</td>
-                        <td className="p-2.5">{r.location || '—'}</td>
-                        <td className="p-2.5">{r.reason || '—'}</td>
-                        <td className="p-2.5">{r.contactNo || '—'}</td>
-                        <td className="p-2.5">{r.status || 'pending'}</td>
-                        <td className="p-2.5">
-                          <div className="flex flex-wrap gap-2.5">
+                        <td className="p-3">{r.requesterName || '—'}</td>
+                        <td className="p-3">{r.requesterEmail || '—'}</td>
+                        <td className="p-3">{r.location || '—'}</td>
+                        <td className="p-3">{r.reason || '—'}</td>
+                        <td className="p-3">{r.contactNo || '—'}</td>
+                        <td className="p-3">{r.status || 'pending'}</td>
+                        <td className="p-3">
+                          <div className="flex gap-2">
                             <button
                               disabled={disabled || st === 'accepted'}
-                              onClick={() => statusMutation.mutate({ requestId: r._id, status: 'accepted' })}
-                              className="rounded-md bg-emerald-600 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60"
+                              onClick={() =>
+                                statusMutation.mutate({
+                                  requestId: r._id,
+                                  status: 'accepted'
+                                })
+                              }
+                              className="rounded-xl bg-emerald-600 px-3 py-2 text-white disabled:opacity-50"
                             >
                               Accept
                             </button>
                             <button
                               disabled={disabled || st === 'rejected'}
-                              onClick={() => statusMutation.mutate({ requestId: r._id, status: 'rejected' })}
-                              className="rounded-md bg-rose-600 px-3 py-2 text-white disabled:cursor-not-allowed disabled:opacity-60"
+                              onClick={() =>
+                                statusMutation.mutate({
+                                  requestId: r._id,
+                                  status: 'rejected'
+                                })
+                              }
+                              className="rounded-xl bg-rose-600 px-3 py-2 text-white disabled:opacity-50"
                             >
                               Reject
                             </button>
@@ -265,9 +303,9 @@ function FoodDetails() {
                 </tbody>
               </table>
             </div>
-          )}
-        </div>
-      )}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
