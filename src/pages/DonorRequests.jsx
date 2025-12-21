@@ -86,7 +86,7 @@ function DonorRequests() {
   }
 
   return (
-    <div className=" px-4 py-8 bg-[var(--bg-main-layout)]">
+    <div className=" px-4 py-8 md:pb-16 bg-[var(--bg-main-layout)]">
       <div className="mx-auto w-full max-w-6xl">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-3xl font-extrabold text-[var(--primary)]">
@@ -174,14 +174,14 @@ function DonorRequests() {
                                 <button
                                   disabled={statusMutation.isPending}
                                   onClick={() => handleStatus(r, 'Accepted')}
-                                  className="rounded-2xl bg-[linear-gradient(180deg,#22c55e,#16a34a)] px-4 py-1 text-sm font-bold text-white disabled:opacity-50"
+                                  className="rounded-2xl bg-[var(--accept-action-bg)] hover:bg-[var(--accept-action-hover)] text-[var(--accept-action-text)] px-4 py-1 text-sm font-bold disabled:opacity-50"
                                 >
                                   Accept
                                 </button>
                                 <button
                                   disabled={statusMutation.isPending}
                                   onClick={() => handleStatus(r, 'Rejected')}
-                                  className="rounded-2xl bg-[rgba(239,68,68,.15)] px-4 py-1 text-sm font-bold text-[var(--danger)] disabled:opacity-50"
+                                  className="rounded-2xl bg-[var(--reject-action-bg)] hover:bg-[var(--reject-action-hover)] text-[var(--reject-action-text)] px-4 py-1 text-sm font-bold  disabled:opacity-50"
                                 >
                                   Reject
                                 </button>

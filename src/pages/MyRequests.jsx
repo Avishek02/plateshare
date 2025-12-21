@@ -45,7 +45,7 @@ function MyRequests() {
   }
 
   return (
-    <div className=" px-4 py-8 bg-[var(--bg-main-layout)]">
+    <div className=" px-4 py-8 md:pb-16 bg-[var(--bg-main-layout)]">
       <div className="mx-auto w-full max-w-6xl">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <h2 className="text-3xl font-extrabold text-[var(--primary)]">
