@@ -3,7 +3,7 @@ import loadingAnimation from "../assets/loading.json"
 
 function Loading() {
   return (
-    <div className="min-h-[240px] flex flex-col items-center justify-center gap-3">
+    <div className="min-h-[240px] flex flex-col items-center justify-center gap-3 pb-4 md:pb-14">
       <div className="w-64 md:w-[400px]">
         <Lottie animationData={loadingAnimation} 
         loop 
