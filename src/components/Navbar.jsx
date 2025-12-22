@@ -5,15 +5,11 @@ import './navbar.css'
 import logo from "../assets/plateshare_logo.png"
 import defaultAvatar from "../assets/default_avatar.jpg"
 
-
-
 function Navbar() {
   const { user, logout } = useAuth()
   const [open, setOpen] = useState(false)
   const [profileOpen, setProfileOpen] = useState(false)
   const profileRef = useRef(null)
-
-
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -25,8 +21,7 @@ function Navbar() {
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [])
 
-  const profileImg = user?.photoURL || defaultAvatar
-
+  const profileImg = user?.photoURL ?? defaultAvatar
 
   return (
     <nav className='nav'>
@@ -54,6 +49,9 @@ function Navbar() {
                   src={profileImg}
                   alt="User profile"
                   className='profile-img'
+                  onError={(e) => {
+                    e.currentTarget.src = defaultAvatar
+                  }}
                 />
               </button>
 
