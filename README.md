@@ -3,7 +3,29 @@
 PlateShare is a community-driven food sharing web application where users can donate surplus food and request available food items to reduce food waste.
 
 🌐 Live Site: https://platesharee.vercel.app/
- c    
+
+
+---
+
+
+# Demo Screenshots
+## Public pages
+![Overview](overview/home.png)
+![Featured Foods](screenshots/featured-foods.png)
+![Impact](screenshots/impact.png)
+![Available Foods](screenshots/available-foods.png)
+
+
+## User Private pages
+![My Foods](screenshots/my-foods.png)
+![My Requests](screenshots/my-requests.png)
+![Donation Requests](screenshots/donation-requests.png)
+
+
+---
+
+
+
 ## Features
 - Users can donate food with details like quantity, location, and expiry date
 - Browse available foods based on highest serving quantity
